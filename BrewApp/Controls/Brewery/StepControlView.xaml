@@ -1,0 +1,36 @@
+﻿<UserControl
+    x:Class="BrewApp.Controls.Brewery.StepControlView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BrewApp.Controls.Brewery"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Border BorderThickness="2" CornerRadius="3.2" BorderBrush="Green">
+        <Viewbox Grid.Column="0" Grid.Row="1" StretchDirection="Both">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="6*" />
+                    <RowDefinition Height="2*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="5*" />
+                    <ColumnDefinition Width="15*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
+                    <TextBlock FontWeight="Bold" Text="Rezept:"/>
+                    <TextBlock Foreground="Green" Text="{Binding BreweryViewModel.InfoBoxViewModel.RecipeName}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+                    <TextBlock FontWeight="Bold" Text=" Schritt:"/>
+                    <TextBlock Foreground="Green" Text="{Binding BreweryViewModel.InfoBoxViewModel.StepName}"/>
+                </StackPanel>
+            </Grid>
+        </Viewbox>
+    </Border>
+</UserControl>

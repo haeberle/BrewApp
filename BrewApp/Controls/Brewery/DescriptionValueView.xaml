@@ -1,0 +1,29 @@
+﻿<Page
+    x:Class="BrewApp.Controls.Brewery.DescriptionValueView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BrewApp.Controls.Brewery"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    x:Name="descriptionValueView">
+    <!--<Viewbox Grid.Column="0" Grid.Row="1" StretchDirection="Both" HorizontalAlignment="Left">-->
+        <StackPanel>
+            <TextBlock 
+            Foreground="White"
+            VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+            Text="{Binding ElementName=descriptionValueView, Path=Description}" 
+            FontSize="60"
+            FontWeight="Bold"/>
+            <TextBlock 
+            Foreground="Green"
+            VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+            Text="{Binding ElementName=descriptionValueView, Path=Value}" 
+            FontSize="60"
+            FontWeight="Bold"/>
+        </StackPanel>
+    <!--</Viewbox>-->
+</Page>

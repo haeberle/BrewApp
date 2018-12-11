@@ -1,0 +1,68 @@
+﻿<UserControl
+    x:Class="BrewApp.Controls.Brewery.MainControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BrewApp.Controls.Brewery"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+     xmlns:converter="using:BrewApp.Controls.Converter"
+    xmlns:controls="using:BrewApp.Controls.Common"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <converter:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="8*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="8*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="4*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="12*" />
+                <RowDefinition Height="3*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <local:TimerView Text="Endzeit" Time="{Binding BreweryViewModel.ExpectedFinish}"  Grid.Row="1" Grid.Column="3"></local:TimerView>
+            <local:TimerView Text="Schrittende" Time="{Binding BreweryViewModel.StepCountDown}" Grid.Row="3" Grid.Column="3"></local:TimerView>
+            <controls:TemperatureViewer Text="Solltemperatur" Temperature="{Binding BreweryViewModel.StepTemperature, Mode=TwoWay}" Grid.Row="1" Grid.Column="1"></controls:TemperatureViewer>
+            <controls:TemperatureViewer Text="Isttemperatur" Temperature="{Binding BreweryViewModel.BrewKettleViewModel.MashTemperature, Mode=OneWay}" Grid.Row="3" Grid.Column="1"></controls:TemperatureViewer>
+            <local:StepControlView Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3"/>
+            <local:BrewKettleView x:Name="brewKettleView" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Center"/>
+            <controls:TemperatureSimulator Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="5" x:Name="simulator"/>
+        </Grid>
+        <StackPanel Grid.Row="0" Grid.Column="1">
+            <Viewbox StretchDirection="Both">
+                <Button Background="Green" Foreground="White" Content="Start" Click="btnStartClick" IsEnabled="{Binding Path=BreweryViewModel.CanStartProcess}" ></Button>
+            </Viewbox>
+            <Viewbox StretchDirection="Both">
+                <Button Content="Nä. Schritt" Background="Orange" Foreground="Black" Click="btnNextStep" IsEnabled="{Binding BreweryViewModel.CanNextStep}"></Button>
+            </Viewbox>
+            <Viewbox StretchDirection="Both">
+                <Button Content="Stop" Background="Red" Foreground="White" Click="btnStopProgramm" IsEnabled="{Binding BreweryViewModel.CanStopProcess}"></Button>
+            </Viewbox>
+            <Viewbox StretchDirection="Both">
+                <Button Content="Rezept Laden" Background="Blue" Foreground="White" Click="btnLoadProgram" IsEnabled="{Binding Path=BreweryViewModel.CanLoadRecipe}"></Button>
+            </Viewbox>
+        </StackPanel>
+        <!--<TextBlock Text="brewery main control."/>-->
+        <!--<Image Source="ms-appx:///Assets/Icons/Kettle-512.png" />-->
+    </Grid>
+</UserControl>

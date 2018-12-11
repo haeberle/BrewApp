@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrewApp", "BrewApp\BrewApp.csproj", "{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_Sim|ARM = Debug_Sim|ARM
+		Debug_Sim|x64 = Debug_Sim|x64
+		Debug_Sim|x86 = Debug_Sim|x86
+		Debug|ARM = Debug|ARM
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|ARM = Release|ARM
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug_Sim|ARM.ActiveCfg = Debug_Sim|ARM
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug_Sim|ARM.Build.0 = Debug_Sim|ARM
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug_Sim|ARM.Deploy.0 = Debug_Sim|ARM
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug_Sim|x64.ActiveCfg = Debug_Sim|x64
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug_Sim|x64.Build.0 = Debug_Sim|x64
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug_Sim|x64.Deploy.0 = Debug_Sim|x64
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug_Sim|x86.ActiveCfg = Debug_Sim|x86
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug_Sim|x86.Build.0 = Debug_Sim|x86
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug_Sim|x86.Deploy.0 = Debug_Sim|x86
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug|ARM.ActiveCfg = Debug|ARM
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug|ARM.Build.0 = Debug|ARM
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug|ARM.Deploy.0 = Debug|ARM
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug|x64.ActiveCfg = Debug|x64
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug|x64.Build.0 = Debug|x64
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug|x64.Deploy.0 = Debug|x64
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug|x86.ActiveCfg = Debug|x86
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug|x86.Build.0 = Debug|x86
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug|x86.Deploy.0 = Debug|x86
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Release|ARM.ActiveCfg = Release|ARM
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Release|ARM.Build.0 = Release|ARM
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Release|ARM.Deploy.0 = Release|ARM
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Release|x64.ActiveCfg = Release|x64
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Release|x64.Build.0 = Release|x64
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Release|x64.Deploy.0 = Release|x64
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Release|x86.ActiveCfg = Release|x86
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Release|x86.Build.0 = Release|x86
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Release|x86.Deploy.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {22455372-4BF3-4311-8EB1-C0805FFC125F}
+	EndGlobalSection
+EndGlobal

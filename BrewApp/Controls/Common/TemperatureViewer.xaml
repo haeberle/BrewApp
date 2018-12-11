@@ -1,0 +1,36 @@
+﻿<UserControl
+    x:Class="BrewApp.Controls.Common.TemperatureViewer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="using:BrewApp.Controls.Converter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    x:Name="temperatureView">
+    <Border BorderBrush="Red" BorderThickness="8" CornerRadius="3.2">
+    <Viewbox Grid.Column="0" Grid.Row="1" StretchDirection="Both">
+        <Viewbox.Resources>
+            <converter:ValueFormatter x:Key="ValueFormatter"/>
+        </Viewbox.Resources>
+        <!--<DatePicker Name="ConverterParmeterCalendarViewDayItem"></DatePicker>-->
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock 
+            Foreground="Red"
+            VerticalAlignment="Top"
+            Text="{Binding ElementName=temperatureView, Path=Text}"
+            FontSize="60"
+            FontWeight="Bold"          
+            />
+                <TextBlock 
+            Foreground="Red"
+            VerticalAlignment="Top"
+            Text="{Binding ElementName=temperatureView, Path=Temperature, Converter={StaticResource ValueFormatter},ConverterParameter=\{0\} °C}" 
+            FontSize="100"
+            FontWeight="Bold"          
+            />
+            </StackPanel>
+        </Viewbox>
+    </Border>
+</UserControl>

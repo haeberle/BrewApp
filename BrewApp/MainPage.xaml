@@ -1,0 +1,59 @@
+﻿<Page
+    x:Class="BrewApp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BrewApp"
+    xmlns:nav="using:BrewApp.Controls.Navigation"
+    xmlns:brew="using:BrewApp.Controls.Brewery"
+    xmlns:past="using:BrewApp.Controls.Pasteur"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Pivot>
+            <PivotItem>
+                <PivotItem.Header>
+                    <nav:TabHeader Label="Brauanlage" 
+                                   Path="ms-appx:///Assets/Icons/Kettle-512.png"
+                                   Background="Red"
+                                   Foreground="GreenYellow"/>
+                </PivotItem.Header>
+                <brew:MainControl x:Name="brewMainControl"/>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <nav:TabHeader Label="Pasteurisieren" 
+                                   Path="ms-appx:///Assets/Icons/Kettle-512.png"
+                                   Background="Blue"
+                                   Foreground="Wheat"/>
+                </PivotItem.Header>
+                <past:MainControl x:Name="pasteurMainControl"/>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <nav:TabHeader Label="Gärtank" 
+                                   Path="ms-appx:///Assets/Icons/Kettle-512.png"
+                                   Background="DarkSeaGreen"
+                                   Foreground="Wheat"/>
+                </PivotItem.Header>
+
+                <!--Pivot content goes here-->
+                <TextBlock Text="Content of pivot item 3."/>
+                <!--< UriSource="pack://application:,,,/BrewApp;component/Assets/Icons/Kettle-512.png" />-->
+                <!--<TextBlock Text="Content of pivot item 1."/>-->
+            </PivotItem>
+            <PivotItem Header="Einstellungen">
+                <!--Pivot content goes here-->
+                <TextBlock Text="Content of pivot item 2."/>
+            </PivotItem>
+            <!--<PivotItem Header="Pivot Item 3">
+                -->
+            <!--Pivot content goes here-->
+            <!--
+                <TextBlock Text="Content of pivot item 3."/>
+            </PivotItem>-->
+        </Pivot>
+    </Grid>
+</Page>
