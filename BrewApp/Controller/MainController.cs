@@ -1,5 +1,7 @@
 ﻿using BrewApp.Controls.Brewery.Logger;
 using BrewApp.Hardware;
+using BrewApp.Hardware.BK500;
+using BrewApp.Hardware.Interfaces;
 using BrewApp.Logic;
 using BrewApp.Logic.Recipes;
 using BrewApp.ViewModel;
@@ -14,8 +16,8 @@ namespace BrewApp.Controller
     public class MainController : IDisposable
     {
         #region Members      
-        EmergencyButton _emergencyButton = null;
-        Vessel _vessel = null;
+        IEmergencyButton _emergencyButton = null;
+        IVessel _vessel = null;
         int _totalDuration = 0;
         StepController _stepController = null;
         //BrewingViewModel _brewingViewModel = null;
@@ -26,7 +28,7 @@ namespace BrewApp.Controller
         #region Constructor
         public MainController()
         {
-            _emergencyButton = new EmergencyButton();
+            _emergencyButton = new EmergencyButtonDummy();// EmergencyButton();
             _vessel = ((App)App.Current).Vessel;
             _vessel.VesselEvent += _vessel_VesselEvent;
             _stepController = new StepController(_vessel, _emergencyButton);
@@ -205,7 +207,7 @@ namespace BrewApp.Controller
             }
 
             _stepController?.Dispose();
-            _emergencyButton?.Dispose();
+            //_emergencyButton?.Dispose();
             //_vessel?.Dispose();
             _vessel.VesselEvent -= _vessel_VesselEvent;
             _logUpdateTimer.Dispose();

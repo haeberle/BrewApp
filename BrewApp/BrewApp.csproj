@@ -169,18 +169,26 @@
     <Compile Include="Controls\Settings\MainControl.xaml.cs">
       <DependentUpon>MainControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Settings\TemperatueCalibSlider.xaml.cs">
-      <DependentUpon>TemperatueCalibSlider.xaml</DependentUpon>
+    <Compile Include="Controls\Settings\TemperatureCalibSlider.xaml.cs">
+      <DependentUpon>TemperatureCalibSlider.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\ViewModel\SettingsViewModel.cs" />
+    <Compile Include="Hardware\BK500\HardwareTestValues.cs" />
     <Compile Include="Hardware\Blinker.cs" />
     <Compile Include="Hardware\Driver\Max31865.cs" />
     <Compile Include="Hardware\EmergencyButton.cs" />
+    <Compile Include="Hardware\BK500\HardwareDefinition.cs" />
+    <Compile Include="Hardware\EmergencyButtonDummy.cs" />
     <Compile Include="Hardware\HardwareDefinition.cs" />
     <Compile Include="Hardware\Interfaces\IAlert.cs" />
     <Compile Include="Hardware\Interfaces\IBlinker.cs" />
     <Compile Include="Hardware\Interfaces\IEmergency.cs" />
-    <Compile Include="Hardware\TemperaturReader.cs" />
-    <Compile Include="Hardware\Vessel.cs" />
+    <Compile Include="Hardware\Interfaces\IEmergencyButton.cs" />
+    <Compile Include="Hardware\Interfaces\IHardwareTest.cs" />
+    <Compile Include="Hardware\Interfaces\IStirrer.cs" />
+    <Compile Include="Hardware\Interfaces\IVessel.cs" />
+    <Compile Include="Hardware\BK500\TemperaturReader.cs" />
+    <Compile Include="Hardware\BK500\Vessel.cs" />
     <Compile Include="Logic\Brewer\Loader.cs" />
     <Compile Include="Logic\Constants.cs" />
     <Compile Include="Hardware\Interfaces\ILogger.cs" />
@@ -206,6 +214,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\tempthumb.png" />
+    <Content Include="Assets\Time_16x.png" />
     <Content Include="FodyWeavers.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
@@ -297,7 +306,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Settings\TemperatueCalibSlider.xaml">
+    <Page Include="Controls\Settings\TemperatureCalibSlider.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -346,7 +355,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_Sim|ARM'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\ARM\Debug_Sim\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;CODE_ANALYSIS</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <NoStdLib>true</NoStdLib>
     <DebugType>full</DebugType>
@@ -359,7 +368,46 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_Sim|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug_Sim\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;SIMULATOR</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;SIMULATOR;CODE_ANALYSIS</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dbg_Sim_IO|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Dbg_Sim_IO\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;CODE_ANALYSIS</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dbg_Sim_IO|ARM'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Dbg_Sim_IO\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;SIMULATOR_IO;CODE_ANALYSIS</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dbg_Sim_IO|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Dbg_Sim_IO\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;SIMULATOR;CODE_ANALYSIS</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <NoStdLib>true</NoStdLib>
     <DebugType>full</DebugType>

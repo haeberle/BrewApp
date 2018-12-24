@@ -1,12 +1,13 @@
-﻿using System;
+﻿using BrewApp.Hardware.Interfaces;
+using System;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 
 namespace BrewApp.Hardware
 {
-    public delegate void ButtonAction(object sender, DateTime time);
+    
     //public delegate void ButtonReleased(object sender, DateTime time);
-    public class EmergencyButton : IDisposable
+    public class EmergencyButton : IEmergencyButton, IDisposable
     {
         public event ButtonAction ButtonPressed;
         public event ButtonAction ButtonReleased;

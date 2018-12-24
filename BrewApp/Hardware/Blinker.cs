@@ -1,4 +1,5 @@
-﻿using BrewApp.Hardware.Interfaces;
+﻿using BrewApp.Hardware.BK500;
+using BrewApp.Hardware.Interfaces;
 using Windows.Devices.Gpio;
 
 namespace BrewApp.Hardware
@@ -11,8 +12,18 @@ namespace BrewApp.Hardware
             _blinkPin?.Dispose();
 #endif
         }
+
+        void InitPinAsOutPut(GpioPin pin)
+        {
+            // Latch HIGH value first. This ensures a default value when the pin is set as output
+            pin.Write(GpioPinValue.High);
+
+            // Set the IO direction as output
+            pin.SetDriveMode(GpioPinDriveMode.Output);
+
+        }
         System.Timers.Timer _blinkTimer = null;// new System.Timers.Timer(2000);
-        public void EnbableBlinker(bool enable)
+        public void EnableBlinker(bool enable)
         {
             
             if (enable)
@@ -20,13 +31,15 @@ namespace BrewApp.Hardware
                 if (_blinkTimer == null)
                 {
                     _blinkTimer = new System.Timers.Timer(2000);
-                    _blinkTimer.Elapsed += _blinkTimer_Elapsed;
-                    _blinkTimer.Start();
+                    _blinkTimer.Elapsed += _blinkTimer_Elapsed;                    
                 }
+                _blinkTimer.Start();
             }
             else
             {
                 _blinkTimer?.Stop();
+                _blinkPin?.Write(GpioPinValue.Low);
+                _toggle = false;
             }
         }
 #if (!SIMULATOR)
@@ -47,6 +60,7 @@ namespace BrewApp.Hardware
             if (_blinkPin == null)
             {
                 _blinkPin = GpioController.GetDefault().OpenPin(HardwareDefinition.BlinkerOut);
+                InitPinAsOutPut(_blinkPin);
             }
             _blinkPin.Write(_toggle ? GpioPinValue.High : GpioPinValue.Low);
 #endif

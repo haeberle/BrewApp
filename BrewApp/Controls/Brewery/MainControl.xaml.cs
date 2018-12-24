@@ -3,6 +3,8 @@ using BrewApp.Controls.Brewery.Dialog;
 using BrewApp.Controls.Brewery.Dialog.ViewModel;
 using BrewApp.Controls.Brewery.ViewModel;
 using BrewApp.Hardware;
+using BrewApp.Hardware.BK500;
+using BrewApp.Hardware.Interfaces;
 using BrewApp.Logic.Recipes;
 using BrewApp.ViewModel;
 using System;

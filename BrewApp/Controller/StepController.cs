@@ -1,11 +1,7 @@
 ﻿using BrewApp.Hardware;
+using BrewApp.Hardware.Interfaces;
 using BrewApp.Logic.Recipes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BrewApp.Controller
 {
@@ -13,7 +9,7 @@ namespace BrewApp.Controller
     {
         //public VesselValues VesselValues { get; set; }
         public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; } 
+        public DateTime EndTime { get; set; }
         public TimeSpan TimeLeft { get; set; }
         public int Duration { get; set; }
         public string StepName { get; set; }
@@ -34,7 +30,7 @@ namespace BrewApp.Controller
     public delegate void StepReached(object sender, int stepNo);
     public delegate void StepEvent(object sender, StepEvents stepEvents);
 
-    public class StepController: IDisposable
+    public class StepController : IDisposable
     {
         #region Events
         public event StepReached StepReached;
@@ -42,23 +38,26 @@ namespace BrewApp.Controller
         #endregion
 
         #region Variables
-        Vessel _vessel = null;
-        EmergencyButton _emergencyButton = null;
+        IVessel _vessel = null;
+        IEmergencyButton _emergencyButton = null;
         StepEvents _stepEvent = new StepEvents();
         System.Timers.Timer _updateTimer = new System.Timers.Timer(1000);
         System.Timers.Timer _stepTimer = new System.Timers.Timer();
         #endregion
 
         #region Constructor
-        public StepController(Vessel vessel, EmergencyButton emergencyButton)
+        public StepController(IVessel vessel, IEmergencyButton emergencyButton)
         {
             _vessel = vessel;
             //_vessel.VesselEvent += _vessel_VesselEvent;
             _vessel.TargetTemperaturReached += _vessel_TargetTemperaturReached;
             _emergencyButton = emergencyButton;
 
-            _emergencyButton.ButtonPressed += _vessel.SetEmergencyStop;
-            _emergencyButton.ButtonReleased += _vessel.ResetEmergencyStop;
+            if (_vessel is IEmergency)
+            {
+                _emergencyButton.ButtonPressed += (_vessel as IEmergency).SetEmergencyStop;
+                _emergencyButton.ButtonReleased += (_vessel as IEmergency).ResetEmergencyStop;
+            }
             _updateTimer.Elapsed += _updateTimer_Elapsed;
             _updateTimer.AutoReset = true;
             _stepTimer.Elapsed += Timer_Elapsed;
@@ -75,7 +74,7 @@ namespace BrewApp.Controller
         #region Rise up events
         private void _updateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            _stepEvent.TimeLeft = _stepEvent.StartTime.AddMinutes(_stepEvent.Duration) - DateTime.Now ;
+            _stepEvent.TimeLeft = _stepEvent.StartTime.AddMinutes(_stepEvent.Duration) - DateTime.Now;
             StepEvent?.Invoke(this, _stepEvent);
         }
 
@@ -90,12 +89,12 @@ namespace BrewApp.Controller
         #region Start / Stop
         bool _run = false;
         StepType _stepType = StepType.HoldAuto;
-        
+
         int _stepNo = 0;
         public void StartStep(Step step)
-        {            
+        {
             if (!_run)
-            {                
+            {
                 _stepType = step.StepType;
                 _stepNo = step.SortOrder;
                 _stepEvent.StartTime = DateTime.Now;
@@ -106,8 +105,8 @@ namespace BrewApp.Controller
                 _stepEvent.StepType = step.StepType;
 
                 _vessel.SetTargetTemperature(step.Temperature);
-                _vessel.SetStirrer(StirrerDirection.Left);
-                _vessel.SetStirrerSpeed(step.StirrerSpeed);
+                (_vessel as IStirrer)?.SetStirrer(StirrerDirection.Left);
+                (_vessel as IStirrer)?.SetStirrerSpeed(step.StirrerSpeed);
                 _vessel.Start();
                 _updateTimer.Start();
                 _updateTimer_Elapsed(this, null);
@@ -156,7 +155,7 @@ namespace BrewApp.Controller
                 _vessel?.Stop();
                 _updateTimer.Stop();
                 _updateTimer_Elapsed(this, null);
-                _stepTimer.Stop();              
+                _stepTimer.Stop();
             }
         }
 
@@ -167,7 +166,7 @@ namespace BrewApp.Controller
         public void Reset()
         {
             StopStep();
-            _stepEvent.ResetValues(); 
+            _stepEvent.ResetValues();
         }
         #endregion
 
@@ -206,11 +205,14 @@ namespace BrewApp.Controller
                 // Free any other managed objects here.
                 //
             }
-            _emergencyButton.ButtonPressed -= _vessel.SetEmergencyStop;
-            _emergencyButton.ButtonReleased -= _vessel.ResetEmergencyStop;
+            if (_vessel is IEmergency)
+            {
+                _emergencyButton.ButtonPressed -= (_vessel as IEmergency).SetEmergencyStop;
+                _emergencyButton.ButtonReleased -= (_vessel as IEmergency).ResetEmergencyStop;
+            }
             _vessel.TargetTemperaturReached -= _vessel_TargetTemperaturReached;
             //_vessel?.Dispose();
-            _emergencyButton?.Dispose();
+            //_emergencyButton?.Dispose();
             disposed = true;
         }
         #endregion

@@ -422,33 +422,38 @@ namespace BrewApp.Hardware.Driver
         ///   <param name="irqPin"> Chip Select Not(CSN or CS\) pin as a Socket.Pin
         ///   <param name="spiClockRateKHZ"> Clock rate in KHz (i.e. 1000 = 1MHz)
         /// </summary>
-        public void Initialize(string spiSelector, int csLine, byte config, int spiClockRateKHZ = 500000)
+        public async Task<bool> Initialize(string spiSelector, int csLine, byte config, int spiClockRateKHZ = 500000)
         {
-
+            Debug.WriteLine($"Start init Max31865 SPI {spiSelector} Pin {csLine} Config {config}");
             var settings = new SpiConnectionSettings(csLine);
             // Set clock to 5MHz 
             settings.ClockFrequency = spiClockRateKHZ;
             settings.Mode = SpiMode.Mode1;
+            settings.SharingMode = SpiSharingMode.Shared;
 
+            Debug.WriteLine("GetSelector");
             // Get a selector string that will return our wanted SPI controller
             string aqs = SpiDevice.GetDeviceSelector(spiSelector);
+            Debug.WriteLine($"Selector {aqs}");
 
-
+            Debug.WriteLine("Get Controller");
             // Find the SPI bus controller devices with our selector string
-            var dis = DeviceInformation.FindAllAsync(aqs).AsTask();
-            dis.Wait();
-
+            var dis = await DeviceInformation.FindAllAsync(aqs).AsTask();
+            //dis.Wait();
+            Debug.WriteLine($"Controller loaded {dis[0].Id}, create SPI Devce");
             // Create an SpiDevice with our selected bus controller and Spi settings
-            var tmp = SpiDevice.FromIdAsync(dis.Result[0].Id, settings).AsTask();
-
-            tmp.Wait();
-            _max31865 = tmp.Result;
+            _max31865 = await SpiDevice.FromIdAsync(dis[0].Id, settings).AsTask();
+           
+            Debug.WriteLine($"Device loaded");
+            //_max31865 = tmp.Result;
 
             _initialized = true;
 
             _config = config;
 
             ResetConfig();
+            Debug.WriteLine($"Init done");
+            return true;
         }
 
         /// <summary>

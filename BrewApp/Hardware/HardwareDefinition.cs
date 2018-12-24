@@ -9,11 +9,6 @@ namespace BrewApp.Hardware
     public class HardwareDefinition
     {
         public const int EmergencyButtonIn = 10;
-        public const int StirrerLeftOut = 10;
-        public const int StirrerRightOut = 10;
-        public const int HeaterPumpOut = 10;
-        public const int Heater1Out = 10;
-        public const int Heater2Out = 10;
-        public const int BlinkerOut = 10;
+        public const int BlinkerOut = 5;
     }
 }

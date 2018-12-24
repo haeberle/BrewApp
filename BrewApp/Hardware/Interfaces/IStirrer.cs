@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace BrewApp.Hardware.Interfaces
 {
-    public enum Direction
+    public enum StirrerDirection
     {
-        Forward,
-        Stop,
-        Backward
+        None,
+        Left,
+        Right
     }
-    interface IStirrer: IDisposable
+    interface IStirrer
     {
-        Direction Direction { get; set; }
-        void SetSpeed(int speed);
+        void SetStirrer(StirrerDirection direction);
+        void SetStirrerSpeed(int speed);
     }
 }

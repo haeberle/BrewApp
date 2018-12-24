@@ -7,6 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrewApp", "BrewApp\BrewApp.
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Dbg_Sim_IO|ARM = Dbg_Sim_IO|ARM
+		Dbg_Sim_IO|x64 = Dbg_Sim_IO|x64
+		Dbg_Sim_IO|x86 = Dbg_Sim_IO|x86
 		Debug_Sim|ARM = Debug_Sim|ARM
 		Debug_Sim|x64 = Debug_Sim|x64
 		Debug_Sim|x86 = Debug_Sim|x86
@@ -18,6 +21,15 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Dbg_Sim_IO|ARM.ActiveCfg = Dbg_Sim_IO|ARM
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Dbg_Sim_IO|ARM.Build.0 = Dbg_Sim_IO|ARM
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Dbg_Sim_IO|ARM.Deploy.0 = Dbg_Sim_IO|ARM
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Dbg_Sim_IO|x64.ActiveCfg = Dbg_Sim_IO|x64
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Dbg_Sim_IO|x64.Build.0 = Dbg_Sim_IO|x64
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Dbg_Sim_IO|x64.Deploy.0 = Dbg_Sim_IO|x64
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Dbg_Sim_IO|x86.ActiveCfg = Dbg_Sim_IO|x86
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Dbg_Sim_IO|x86.Build.0 = Dbg_Sim_IO|x86
+		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Dbg_Sim_IO|x86.Deploy.0 = Dbg_Sim_IO|x86
 		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug_Sim|ARM.ActiveCfg = Debug_Sim|ARM
 		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug_Sim|ARM.Build.0 = Debug_Sim|ARM
 		{E22423C7-F6AB-4BE5-8715-458F5A6FA57E}.Debug_Sim|ARM.Deploy.0 = Debug_Sim|ARM

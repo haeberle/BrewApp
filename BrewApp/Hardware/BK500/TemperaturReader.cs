@@ -3,8 +3,9 @@ using BrewApp.Logic;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
-namespace BrewApp.Hardware
+namespace BrewApp.Hardware.BK500
 {
     public class ConfigLoader
     {
@@ -30,7 +31,7 @@ namespace BrewApp.Hardware
             if (!File.Exists(path))
             {
                 Directory.CreateDirectory(Constants.ApplicationSettingsPath);
-                
+
                 // save dummy
 
                 configs = new Dictionary<string, Config>();
@@ -76,7 +77,7 @@ namespace BrewApp.Hardware
                 //path = Path.Combine(Constants.ApplicationSettingsPath, PATH);
                 var content = File.ReadAllText(path);
 
-                var bytes = System.Text.Encoding.Unicode.GetBytes(content);
+                //var /*bytes*/ = System.Text.Encoding.Unicode.GetBytes(content);
 
                 configs = JsonConvert.DeserializeObject<Dictionary<string, Config>>(content, new JsonSerializerSettings
                 {
@@ -94,16 +95,64 @@ namespace BrewApp.Hardware
             }
 
         }
+
+        public static void SetConfiguration(Config config, string configId)
+        {
+            var path = Path.Combine(Constants.ApplicationSettingsPath, PATH);
+            Dictionary<string, Config> configs = null;
+
+            if (File.Exists(path))
+            {
+                var ct = File.ReadAllText(path);
+
+                //var bytes = System.Text.Encoding.Unicode.GetBytes(ct);
+
+                configs = JsonConvert.DeserializeObject<Dictionary<string, Config>>(ct, new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    Formatting = Formatting.Indented
+                });
+
+                if (configs.ContainsKey(configId))
+                {
+                    configs[configId] = config;
+                }
+                else
+                {
+                    configs.Add(configId, config);
+                }
+            }
+            else
+            {
+                configs = new Dictionary<string, Config>();
+                configs.Add(configId, config);
+            }
+
+            var content = JsonConvert.SerializeObject(configs);
+            File.WriteAllText(path, content);
+        }
     }
 
     public class TemperaturReader
     {
-#if (SIMULATOR)
+#if (SIMULATOR || SIMULATOR_IO)
         string _config = null;
 #else
          Max31865 _driver = null;
 #endif
 
+        public async Task<bool> Init()
+        {
+#if (!SIMULATOR && !SIMULATOR_IO)
+            var config = ConfigLoader.GetConfiguration(_configId);
+            _driver = new Max31865(config.Calibration, config.RRef);
+            return await _driver.Initialize(config.SPIInterfaceName, (int)config.SPIPin, config.Configuration);
+#else
+            return true;
+#endif
+        }
+
+        
         public TemperaturReader(string configId)
         {
 
@@ -114,16 +163,14 @@ namespace BrewApp.Hardware
             //}
             _config = configId;
 #else
-            var config = ConfigLoader.GetConfiguration(configId);
-
-            _driver = new Max31865(config.Calibration, config.RRef);
-            _driver.Initialize(config.SPIInterfaceName, (int)config.SPIPin, config.Configuration);
+            //var config = ConfigLoader.GetConfiguration(configId);
+            _config = configId;
 #endif
         }
 
         public double GetTemperature()
         {
-#if (SIMULATOR)
+#if (SIMULATOR || SIMULATOR_IO)
             if (!((App)App.Current).Properties.ContainsKey(_config))
             {
                 ((App)App.Current).Properties.Add(_config, "10.0");
@@ -131,9 +178,12 @@ namespace BrewApp.Hardware
 
             return double.Parse(((App)App.Current).Properties[_config]);
 #else
-
-            _driver.ExecuteOneShot();
-            return _driver.GetTempC();
+            if (_driver != null)
+            {
+                _driver.ExecuteOneShot();
+                return _driver.GetTempC();
+            }
+            return -270.0;
 #endif
         }
     }

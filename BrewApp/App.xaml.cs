@@ -1,4 +1,6 @@
 ﻿using BrewApp.Hardware;
+using BrewApp.Hardware.BK500;
+using BrewApp.Hardware.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,6 +33,7 @@ namespace BrewApp
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            
         }
 
         /// <summary>
@@ -72,6 +75,7 @@ namespace BrewApp
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+            Vessel.InitVessel();
         }
 
         /// <summary>
@@ -99,6 +103,6 @@ namespace BrewApp
         }
 
         public Dictionary<string, string> Properties { get; private set; } = new Dictionary<string, string>();
-        public Vessel Vessel { get; private set; } = new Vessel(); 
+        public IVessel Vessel { get; private set; } = new Vessel(); 
     }
 }

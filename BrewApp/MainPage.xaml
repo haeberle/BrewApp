@@ -6,6 +6,7 @@
     xmlns:nav="using:BrewApp.Controls.Navigation"
     xmlns:brew="using:BrewApp.Controls.Brewery"
     xmlns:past="using:BrewApp.Controls.Pasteur"
+    xmlns:settings="using:BrewApp.Controls.Settings"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -33,27 +34,13 @@
             </PivotItem>
             <PivotItem>
                 <PivotItem.Header>
-                    <nav:TabHeader Label="Gärtank" 
+                    <nav:TabHeader Label="Einstellungen" 
                                    Path="ms-appx:///Assets/Icons/Kettle-512.png"
                                    Background="DarkSeaGreen"
                                    Foreground="Wheat"/>
                 </PivotItem.Header>
-
-                <!--Pivot content goes here-->
-                <TextBlock Text="Content of pivot item 3."/>
-                <!--< UriSource="pack://application:,,,/BrewApp;component/Assets/Icons/Kettle-512.png" />-->
-                <!--<TextBlock Text="Content of pivot item 1."/>-->
+                <settings:MainControl x:Name="settingsMainControl"/>
             </PivotItem>
-            <PivotItem Header="Einstellungen">
-                <!--Pivot content goes here-->
-                <TextBlock Text="Content of pivot item 2."/>
-            </PivotItem>
-            <!--<PivotItem Header="Pivot Item 3">
-                -->
-            <!--Pivot content goes here-->
-            <!--
-                <TextBlock Text="Content of pivot item 3."/>
-            </PivotItem>-->
         </Pivot>
     </Grid>
 </Page>

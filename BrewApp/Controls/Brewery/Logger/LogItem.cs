@@ -1,5 +1,7 @@
 ﻿using BrewApp.Controller;
 using BrewApp.Hardware;
+using BrewApp.Hardware.BK500;
+using BrewApp.Hardware.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

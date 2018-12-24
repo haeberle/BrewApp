@@ -9,8 +9,7 @@
     xmlns:controls="using:BrewApp.Controls.Common"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400"
-    Background="Green">
+    d:DesignWidth="400">
     <UserControl.Resources>
         <converter:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <Style TargetType="controls:MyToggleButton">
@@ -242,16 +241,25 @@
         </Grid.ColumnDefinitions>
         <controls:TemperatureSliderView Header="Solltemperatur" IsChangeEnabled="true" Temperature="{Binding PasteurViewModel.ToBeTemperature, Mode=TwoWay}" Grid.Row="1" Grid.Column="1"></controls:TemperatureSliderView>
         <controls:TemperatureViewer Text="Isttemperatur" Temperature="{Binding PasteurViewModel.AsIsTemperature, Mode=OneWay}" Grid.Row="3" Grid.Column="1"></controls:TemperatureViewer>
-        <Viewbox StretchDirection="Both" Grid.Row="5" Grid.Column="1">
+        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
             <!--<ToggleButton Click="tglStartStopVessel" IsChecked="{Binding PasteurViewModel.VesselRunning, Mode=TwoWay}" Content="{Binding PasteurViewModel.VesselStartStopButtonText}" 
                           Background="{Binding PasteurViewModel.VesselStartStopButtonBackground}"
                           Foreground="{Binding PasteurViewModel.VesselStartStopButtonForeground}"/>-->
-            <controls:MyToggleButton Click="tglStartStopVessel" 
+            <Viewbox HorizontalAlignment="Center" Stretch="Fill" StretchDirection="Both" >
+                <controls:MyToggleButton Click="tglStartStopVessel" 
                                      IsEnabled="{Binding PasteurViewModel.CanStartProcess}" 
                                      Content="Start" CheckedText="Stop" 
                                      Background="Green" CheckedBackground="Red"
                                      IsChecked="{Binding PasteurViewModel.ProcessIsRunning, Mode=TwoWay}"/>
-        </Viewbox>
+            </Viewbox>
+            <Viewbox Stretch="Fill" StretchDirection="Both">
+                <Button HorizontalAlignment="Center">
+                    <Button.Content>
+                        <Image Source="/Assets/Time_16x.png"></Image>
+                    </Button.Content>
+                </Button>
+            </Viewbox>
+        </StackPanel>
         <controls:TimeSliderView ToBeTime="{Binding PasteurViewModel.ToBeTime, Mode=TwoWay}" AsIsTime="{Binding PasteurViewModel.AsIsTime, Mode=TwoWay}" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Header="Countdown" />
         <Viewbox StretchDirection="Both" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3" >
             <StackPanel Orientation="Horizontal">

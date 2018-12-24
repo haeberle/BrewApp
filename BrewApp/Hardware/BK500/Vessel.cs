@@ -1,29 +1,12 @@
 ﻿using BrewApp.Hardware.Interfaces;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 
-namespace BrewApp.Hardware
+namespace BrewApp.Hardware.BK500
 {
-    // Stirrer
-    // start, left, right
-    // speed
-
-    // Heater
-    // None, Half, Full
-    // Pump
-
-    // MashTemp
-    // VesselTemp
-
-    public enum StirrerDirection
-    {
-        None,
-        Left,
-        Right
-    }
-
     public class VesselValues
     {
         public bool PumpOn { get; set; }
@@ -39,14 +22,15 @@ namespace BrewApp.Hardware
 
     public delegate void TemperatureEvent(object sender, double temperature);
     public delegate void VesselEvent(object sender, VesselValues vesselValues);
-    public class Vessel : IEmergency, IDisposable
+    public class Vessel : IVessel, IHardwareTest, IStirrer, IEmergency, IDisposable
     {
         #region Constants
-        const int SLEEPTIME = 500;
+        const int SLEEPTIME = 1000;
         const double HYSTERESYSUP = 0.1;
         const double HYSTERESYSDOWN = 0.2;
         const double VESSELOVERRUN = 10.0;
         #endregion
+
         #region Events
         //public event TemperatureEvent VesselIsTemperatureChange;
         //public event TemperatureEvent VesselBeTemperatureChange;
@@ -69,6 +53,14 @@ namespace BrewApp.Hardware
 
         #endregion
 
+        #region Init
+        public async Task<bool> InitVessel()
+        {
+            await _vesselTemperature.Init();
+            return await _mashTemperature.Init();
+        }
+        #endregion
+
         #region Constructor
         public Vessel()
         {
@@ -78,6 +70,11 @@ namespace BrewApp.Hardware
             _heaterPumpPin = GpioController.GetDefault().OpenPin(HardwareDefinition.HeaterPumpOut);
             _heater1Pin = GpioController.GetDefault().OpenPin(HardwareDefinition.Heater1Out);
             _heater2Pin = GpioController.GetDefault().OpenPin(HardwareDefinition.Heater2Out);
+            InitPinAsOutPut(_stirrerLeftPin);
+            InitPinAsOutPut(_stirrerRightPin);
+            InitPinAsOutPut(_heaterPumpPin);
+            InitPinAsOutPut(_heater1Pin);
+            InitPinAsOutPut(_heater2Pin);
 #endif
             ProcessStart();
         }
@@ -85,6 +82,18 @@ namespace BrewApp.Hardware
         ~Vessel()
         {
             Dispose(false);
+        }
+        #endregion
+
+        #region Init
+        void InitPinAsOutPut(GpioPin pin)
+        {
+            // Latch HIGH value first. This ensures a default value when the pin is set as output
+            pin.Write(GpioPinValue.High);
+
+            // Set the IO direction as output
+            pin.SetDriveMode(GpioPinDriveMode.Output);
+
         }
         #endregion
 
@@ -103,12 +112,12 @@ namespace BrewApp.Hardware
 
         #region Temperatures
 
-        public double GetVesselTemperature()
+        double GetVesselTemperature()
         {
             return _vesselTemperature.GetTemperature();
         }
 
-        public double GetMashTemperature()
+        double GetMashTemperature()
         {
             return _mashTemperature.GetTemperature();
         }
@@ -146,14 +155,31 @@ namespace BrewApp.Hardware
         }
         #endregion
 
-        #region Start/Stop/Hold
+        #region Start/Stop
         bool _run = false;
         public void Start()
         {
             _run = true;
         }
+        public void Stop()
+        {
+            if (_run)
+            {
+                //_cancellationToken.Cancel();
+                _run = false;
+#if (!SIMULATOR)
+                _stirrerLeftPin.Write(GpioPinValue.Low);
+                _stirrerRightPin.Write(GpioPinValue.Low);
+                _heaterPumpPin.Write(GpioPinValue.Low);
+                _heater1Pin.Write(GpioPinValue.Low);
+                _heater2Pin.Write(GpioPinValue.Low);
+#endif
+            }
+        }
+        #endregion
 
-        private void ProcessStart()
+        #region Process
+        void ProcessStart()
         {
 
             //StirrerDirection tempDirection = StirrerDirection.None;
@@ -175,8 +201,8 @@ namespace BrewApp.Hardware
                 {
                     while (!_cancellationToken.IsCancellationRequested)
                     {
-                        StirrerDirection tempDirection = StirrerDirection.None;
-                        int tempStirrerSpeed = 0;
+                        //StirrerDirection tempDirection = StirrerDirection.None;
+                        //int tempStirrerSpeed = 0;
                         //bool sendVesselStateState = false;
                         double vesselTemperature = 0.0;
                         //double tempVesselTemperature = 0.0;
@@ -185,9 +211,9 @@ namespace BrewApp.Hardware
                         bool heater1On = false;
                         bool heater2On = false;
                         bool pump = false;
-                        bool tempHeater1On = false;
-                        bool tempHeater2On = false;
-                        bool tempPump = false;
+                        //bool tempHeater1On = false;
+                        //bool tempHeater2On = false;
+                        //bool tempPump = false;
 
                         #region Temperature Reader
 
@@ -225,44 +251,44 @@ namespace BrewApp.Hardware
                                     // heater off
                                     heater1On = heater2On = false;
                                 }
-                            }
+                            }                            
 
-                            if (tempHeater1On != heater1On || tempHeater2On != heater2On || tempPump != pump)
-                            {
-                                //sendVesselStateState = true;
-                                tempHeater1On = heater1On;
-                                tempHeater2On = heater2On;
-                                tempPump = pump;
-                            }
+                            //if (tempHeater1On != heater1On || tempHeater2On != heater2On || tempPump != pump)
+                            //{
+                            //    //sendVesselStateState = true;
+                            //    tempHeater1On = heater1On;
+                            //    tempHeater2On = heater2On;
+                            //    tempPump = pump;
+                            //}
 
                             #endregion
 
                             #region Stirrer
-                            if (tempDirection != _stirrerDirection)
-                            {
-                                //if (_stirrerDirection == StirrerDirection.None)
-                                //{
-                                //    // switch off
-                                //}
-                                //else if (_stirrerDirection == StirrerDirection.Left)
-                                //{
-                                //    // left on
-                                //}
-                                //else
-                                //{
-                                //    // right on
-                                //}
-                                tempDirection = _stirrerDirection;
-                                //sendVesselStateState = true;
-                            }
+                            //if (tempDirection != _stirrerDirection)
+                            //{
+                            //    //if (_stirrerDirection == StirrerDirection.None)
+                            //    //{
+                            //    //    // switch off
+                            //    //}
+                            //    //else if (_stirrerDirection == StirrerDirection.Left)
+                            //    //{
+                            //    //    // left on
+                            //    //}
+                            //    //else
+                            //    //{
+                            //    //    // right on
+                            //    //}
+                            //    tempDirection = _stirrerDirection;
+                            //    //sendVesselStateState = true;
+                            //}
 
-                            if (tempStirrerSpeed != _stirrerSpeed)
-                            {
-                                // set Speed
+                            //if (tempStirrerSpeed != _stirrerSpeed)
+                            //{
+                            //    // set Speed
 
-                                tempStirrerSpeed = _stirrerSpeed;
-                                //sendVesselStateState = true;
-                            }
+                            //    tempStirrerSpeed = _stirrerSpeed;
+                            //    //sendVesselStateState = true;
+                            //}
                             #endregion
 
                             #region Set IO's
@@ -271,11 +297,16 @@ namespace BrewApp.Hardware
                             {
                                 // set io's as defined
 #if (!SIMULATOR)
-                                _stirrerLeftPin.Write(_stirrerDirection == StirrerDirection.Left ? GpioPinValue.High:GpioPinValue.Low);
+                                _stirrerLeftPin.Write(_stirrerDirection == StirrerDirection.Left ? GpioPinValue.High : GpioPinValue.Low);
+                                Debug.WriteLine($"Stirrer Left: {_stirrerLeftPin.Read()}");
                                 _stirrerRightPin.Write(_stirrerDirection == StirrerDirection.Right ? GpioPinValue.High : GpioPinValue.Low);
+                                Debug.WriteLine($"Stirrer Right: {_stirrerRightPin.Read()}");
                                 _heaterPumpPin.Write(pump ? GpioPinValue.High : GpioPinValue.Low);
+                                Debug.WriteLine($"Pump: {_heaterPumpPin.Read()}");
                                 _heater1Pin.Write(heater1On ? GpioPinValue.High : GpioPinValue.Low);
+                                Debug.WriteLine($"Heater 1: {_heater1Pin.Read()}");
                                 _heater2Pin.Write(heater2On ? GpioPinValue.High : GpioPinValue.Low);
+                                Debug.WriteLine($"Heater 2: {_heater2Pin.Read()}");
 #endif
                             }
                             else
@@ -296,8 +327,8 @@ namespace BrewApp.Hardware
                         #region Send Vessel State
                         var vesselValues = new VesselValues()
                         {
-                            StirrerDirection = tempDirection,
-                            StirrerSpeed = tempStirrerSpeed,
+                            StirrerDirection = _stirrerDirection,
+                            StirrerSpeed = _stirrerSpeed,
                             PumpOn = pump,
                             HeaterLevel1On = heater1On,
                             HeaterLevel2On = heater2On,
@@ -311,44 +342,13 @@ namespace BrewApp.Hardware
                         #endregion
                         //sendVesselStateState = false;
                         //}
-                        #endregion
+
                         // speep for x seconds
                         Thread.Sleep(SLEEPTIME);
                     }
                 }, _cancellationToken.Token);
         }
-
-
-        public void Stop()
-        {
-            if (_run)
-            {
-                //_cancellationToken.Cancel();
-                _run = false;
-#if (!SIMULATOR)
-                _stirrerLeftPin.Write(GpioPinValue.Low);
-                _stirrerRightPin.Write(GpioPinValue.Low);
-                _heaterPumpPin.Write(GpioPinValue.Low);
-                _heater1Pin.Write(GpioPinValue.Low);
-                _heater2Pin.Write(GpioPinValue.Low);
-#endif
-            }
-        }
-        //public void Hold()
-        //{
-        //    if (_run)
-        //    {
-
-        //    }
-        //}
-        //public void Resume()
-        //{
-        //    if (_run)
-        //    {
-
-        //    }
-        //}
-
+        #endregion
 
         #region IDisposable
         public void Dispose()
@@ -379,6 +379,26 @@ namespace BrewApp.Hardware
 #endif
             _cancellationToken.Cancel();
             disposed = true;
+        }
+        #endregion
+
+        #region HardwareTest
+        public void SetValues(IValues values)
+        {
+            var testVal = values as HardwareTestValues;
+            if (testVal != null)
+            {
+                if (!_run)
+                {
+#if (!SIMULATOR)
+                    _stirrerLeftPin?.Write(testVal.StirrerDirection == StirrerDirection.Left ? GpioPinValue.High : GpioPinValue.Low);
+                    _stirrerRightPin?.Write(testVal.StirrerDirection == StirrerDirection.Right ? GpioPinValue.High : GpioPinValue.Low);
+                    _heaterPumpPin?.Write(testVal.PumpOn ? GpioPinValue.High : GpioPinValue.Low);
+                    _heater1Pin?.Write(testVal.Heater1On ? GpioPinValue.High : GpioPinValue.Low);
+                    _heater2Pin?.Write(testVal.Heater2On ? GpioPinValue.High : GpioPinValue.Low);
+#endif
+                }
+            }
         }
         #endregion
     }

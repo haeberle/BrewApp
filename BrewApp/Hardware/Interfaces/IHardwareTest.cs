@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace BrewApp.Hardware.Interfaces
 {
-    public interface IBlinker
+    public interface IValues
     {
-        void EnableBlinker(bool enable);
+
+    }
+
+    public interface IHardwareTest
+    {
+        void SetValues(IValues values);
     }
 }
