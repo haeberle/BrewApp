@@ -41,13 +41,13 @@ namespace BrewApp.Hardware.BK500
 
         #region Variables
         CancellationTokenSource _cancellationToken = new CancellationTokenSource();
-#if (!SIMULATOR)
-        GpioPin _stirrerLeftPin = null;
-        GpioPin _stirrerRightPin = null;
-        GpioPin _heaterPumpPin = null;
-        GpioPin _heater1Pin = null;
-        GpioPin _heater2Pin = null;
-#endif
+//#if (!SIMULATOR)
+//        //GpioPin _stirrerLeftPin = null;
+//        //GpioPin _stirrerRightPin = null;
+//        //GpioPin _heaterPumpPin = null;
+//        //GpioPin _heater1Pin = null;
+//        //GpioPin _heater2Pin = null;
+//#endif
         TemperaturReader _vesselTemperature = new TemperaturReader("VesselTemperatureProbe");
         TemperaturReader _mashTemperature = new TemperaturReader("MashTemperatureProbe");
 
@@ -64,18 +64,18 @@ namespace BrewApp.Hardware.BK500
         #region Constructor
         public Vessel()
         {
-#if (!SIMULATOR)
-            _stirrerLeftPin = GpioController.GetDefault().OpenPin(HardwareDefinition.StirrerLeftOut);
-            _stirrerRightPin = GpioController.GetDefault().OpenPin(HardwareDefinition.StirrerRightOut);
-            _heaterPumpPin = GpioController.GetDefault().OpenPin(HardwareDefinition.HeaterPumpOut);
-            _heater1Pin = GpioController.GetDefault().OpenPin(HardwareDefinition.Heater1Out);
-            _heater2Pin = GpioController.GetDefault().OpenPin(HardwareDefinition.Heater2Out);
-            InitPinAsOutPut(_stirrerLeftPin);
-            InitPinAsOutPut(_stirrerRightPin);
-            InitPinAsOutPut(_heaterPumpPin);
-            InitPinAsOutPut(_heater1Pin);
-            InitPinAsOutPut(_heater2Pin);
-#endif
+//#if (!SIMULATOR)
+//            //_stirrerLeftPin = GpioController.GetDefault().OpenPin(HardwareDefinition.StirrerLeftOut);
+//            //_stirrerRightPin = GpioController.GetDefault().OpenPin(HardwareDefinition.StirrerRightOut);
+//            //_heaterPumpPin = GpioController.GetDefault().OpenPin(HardwareDefinition.HeaterPumpOut);
+//            //_heater1Pin = GpioController.GetDefault().OpenPin(HardwareDefinition.Heater1Out);
+//            //_heater2Pin = GpioController.GetDefault().OpenPin(HardwareDefinition.Heater2Out);
+//            //InitPinAsOutPut(_stirrerLeftPin);
+//            //InitPinAsOutPut(_stirrerRightPin);
+//            //InitPinAsOutPut(_heaterPumpPin);
+//            //InitPinAsOutPut(_heater1Pin);
+//            //InitPinAsOutPut(_heater2Pin);
+//#endif
             ProcessStart();
         }
 
@@ -168,11 +168,16 @@ namespace BrewApp.Hardware.BK500
                 //_cancellationToken.Cancel();
                 _run = false;
 #if (!SIMULATOR)
-                _stirrerLeftPin.Write(GpioPinValue.Low);
-                _stirrerRightPin.Write(GpioPinValue.Low);
-                _heaterPumpPin.Write(GpioPinValue.Low);
-                _heater1Pin.Write(GpioPinValue.Low);
-                _heater2Pin.Write(GpioPinValue.Low);
+                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.StirrerLeftOut, false);
+                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.StirrerRightOut, false);
+                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.HeaterPumpOut, false);
+                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.Heater1Out, false);
+                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.Heater2Out, false);
+                //_stirrerLeftPin.Write(GpioPinValue.Low);
+                //_stirrerRightPin.Write(GpioPinValue.Low);
+                //_heaterPumpPin.Write(GpioPinValue.Low);
+                //_heater1Pin.Write(GpioPinValue.Low);
+                //_heater2Pin.Write(GpioPinValue.Low);
 #endif
             }
         }
@@ -296,28 +301,39 @@ namespace BrewApp.Hardware.BK500
                             if (!_emergencyOn)
                             {
                                 // set io's as defined
-#if (!SIMULATOR)
-                                _stirrerLeftPin.Write(_stirrerDirection == StirrerDirection.Left ? GpioPinValue.High : GpioPinValue.Low);
-                                Debug.WriteLine($"Stirrer Left: {_stirrerLeftPin.Read()}");
-                                _stirrerRightPin.Write(_stirrerDirection == StirrerDirection.Right ? GpioPinValue.High : GpioPinValue.Low);
-                                Debug.WriteLine($"Stirrer Right: {_stirrerRightPin.Read()}");
-                                _heaterPumpPin.Write(pump ? GpioPinValue.High : GpioPinValue.Low);
-                                Debug.WriteLine($"Pump: {_heaterPumpPin.Read()}");
-                                _heater1Pin.Write(heater1On ? GpioPinValue.High : GpioPinValue.Low);
-                                Debug.WriteLine($"Heater 1: {_heater1Pin.Read()}");
-                                _heater2Pin.Write(heater2On ? GpioPinValue.High : GpioPinValue.Low);
-                                Debug.WriteLine($"Heater 2: {_heater2Pin.Read()}");
-#endif
+//#if (!SIMULATOR)
+                                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.StirrerLeftOut, _stirrerDirection == StirrerDirection.Left);
+                                //_stirrerLeftPin.Write(_stirrerDirection == StirrerDirection.Left ? GpioPinValue.High : GpioPinValue.Low);
+                                //Debug.WriteLine($"Stirrer Left: {_stirrerLeftPin.Read()}");
+                                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.StirrerRightOut, _stirrerDirection == StirrerDirection.Right);
+                                //_stirrerRightPin.Write(_stirrerDirection == StirrerDirection.Right ? GpioPinValue.High : GpioPinValue.Low);
+                                //Debug.WriteLine($"Stirrer Right: {_stirrerRightPin.Read()}");
+                                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.HeaterPumpOut, pump);
+                                //_heaterPumpPin.Write(pump ? GpioPinValue.High : GpioPinValue.Low);
+                                //Debug.WriteLine($"Pump: {_heaterPumpPin.Read()}");
+                                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.Heater1Out, heater1On);
+                                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.Heater2Out, heater2On);
+                                //_heater1Pin.Write(heater1On ? GpioPinValue.High : GpioPinValue.Low);
+                                //Debug.WriteLine($"Heater 1: {_heater1Pin.Read()}");
+                                //_heater2Pin.Write(heater2On ? GpioPinValue.High : GpioPinValue.Low);
+                                //Debug.WriteLine($"Heater 2: {_heater2Pin.Read()}");
+//#endif
                             }
                             else
                             {
-#if (!SIMULATOR)
-                                _stirrerLeftPin.Write(GpioPinValue.Low);
-                                _stirrerRightPin.Write(GpioPinValue.Low);
-                                _heaterPumpPin.Write(GpioPinValue.Low);
-                                _heater1Pin.Write(GpioPinValue.Low);
-                                _heater2Pin.Write(GpioPinValue.Low);
-#endif
+//#if (!SIMULATOR)
+                                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.StirrerLeftOut, false);
+                                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.StirrerRightOut, false);
+                                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.HeaterPumpOut, false);
+                                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.Heater1Out, false);
+                                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.Heater2Out, false);
+
+                                //_stirrerLeftPin.Write(GpioPinValue.Low);
+                                //_stirrerRightPin.Write(GpioPinValue.Low);
+                                //_heaterPumpPin.Write(GpioPinValue.Low);
+                                //_heater1Pin.Write(GpioPinValue.Low);
+                                //_heater2Pin.Write(GpioPinValue.Low);
+//#endif
                             }
                             #endregion
                         }
@@ -370,13 +386,13 @@ namespace BrewApp.Hardware.BK500
                 // Free any other managed objects here.
                 //
             }
-#if (!SIMULATOR)
-            _stirrerLeftPin?.Dispose();
-            _stirrerRightPin?.Dispose();
-            _heaterPumpPin?.Dispose();
-            _heater1Pin?.Dispose();
-            _heater2Pin?.Dispose();
-#endif
+//#if (!SIMULATOR)
+//            _stirrerLeftPin?.Dispose();
+//            _stirrerRightPin?.Dispose();
+//            _heaterPumpPin?.Dispose();
+//            _heater1Pin?.Dispose();
+//            _heater2Pin?.Dispose();
+//#endif
             _cancellationToken.Cancel();
             disposed = true;
         }
@@ -390,13 +406,19 @@ namespace BrewApp.Hardware.BK500
             {
                 if (!_run)
                 {
-#if (!SIMULATOR)
-                    _stirrerLeftPin?.Write(testVal.StirrerDirection == StirrerDirection.Left ? GpioPinValue.High : GpioPinValue.Low);
-                    _stirrerRightPin?.Write(testVal.StirrerDirection == StirrerDirection.Right ? GpioPinValue.High : GpioPinValue.Low);
-                    _heaterPumpPin?.Write(testVal.PumpOn ? GpioPinValue.High : GpioPinValue.Low);
-                    _heater1Pin?.Write(testVal.Heater1On ? GpioPinValue.High : GpioPinValue.Low);
-                    _heater2Pin?.Write(testVal.Heater2On ? GpioPinValue.High : GpioPinValue.Low);
-#endif
+//#if (!SIMULATOR)
+                    HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.StirrerLeftOut, testVal.StirrerDirection == StirrerDirection.Left);
+                    HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.StirrerRightOut, testVal.StirrerDirection == StirrerDirection.Right);
+                    HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.HeaterPumpOut, testVal.PumpOn);
+                    HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.Heater1Out, testVal.Heater1On);
+                    HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.Heater2Out, testVal.Heater2On);
+
+                    //_stirrerLeftPin?.Write(testVal.StirrerDirection == StirrerDirection.Left ? GpioPinValue.High : GpioPinValue.Low);
+                    //_stirrerRightPin?.Write(testVal.StirrerDirection == StirrerDirection.Right ? GpioPinValue.High : GpioPinValue.Low);
+                    //_heaterPumpPin?.Write(testVal.PumpOn ? GpioPinValue.High : GpioPinValue.Low);
+                    //_heater1Pin?.Write(testVal.Heater1On ? GpioPinValue.High : GpioPinValue.Low);
+                    //_heater2Pin?.Write(testVal.Heater2On ? GpioPinValue.High : GpioPinValue.Low);
+//#endif
                 }
             }
         }

@@ -1,5 +1,6 @@
 ﻿using BrewApp.Hardware.BK500;
 using BrewApp.Hardware.Interfaces;
+using System.Diagnostics;
 using Windows.Devices.Gpio;
 
 namespace BrewApp.Hardware
@@ -8,9 +9,9 @@ namespace BrewApp.Hardware
     {
         ~Blinker()
         {
-#if (!SIMULATOR)
-            _blinkPin?.Dispose();
-#endif
+//#if (!SIMULATOR)
+//            _blinkPin?.Dispose();
+//#endif
         }
 
         void InitPinAsOutPut(GpioPin pin)
@@ -38,32 +39,39 @@ namespace BrewApp.Hardware
             else
             {
                 _blinkTimer?.Stop();
-                _blinkPin?.Write(GpioPinValue.Low);
+                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.BlinkerOut, false);
+                //_blinkPin?.Write(GpioPinValue.Low);
+                //Debug.WriteLine($"Blink: {_blinkPin.Read()}");
                 _toggle = false;
             }
         }
-#if (!SIMULATOR)
-        GpioPin _blinkPin = null;
-#endif
+//#if (!SIMULATOR)
+//        //GpioPin _blinkPin = null;
+//#endif
         bool _toggle = false;
         private void _blinkTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (_toggle)
+            if (_blinkTimer.Enabled)
             {
-                _toggle = false;
+                if (_toggle)
+                {
+                    _toggle = false;
+                }
+                else
+                {
+                    _toggle = true;
+                }
+                //#if (!SIMULATOR)
+                //if (_blinkPin == null)
+                //{
+                //    _blinkPin = GpioController.GetDefault().OpenPin(HardwareDefinition.BlinkerOut);
+                //    InitPinAsOutPut(_blinkPin);
+                //}
+                HardwareController.GetDefault().GetRelaisBoard().SetIO(HardwareDefinition.BlinkerOut, _toggle);
+                //_blinkPin.Write(_toggle ? GpioPinValue.High : GpioPinValue.Low);
+                //Debug.WriteLine($"Blink: {_blinkPin.Read()}");
             }
-            else
-            {
-                _toggle = true;
-            }
-#if (!SIMULATOR)
-            if (_blinkPin == null)
-            {
-                _blinkPin = GpioController.GetDefault().OpenPin(HardwareDefinition.BlinkerOut);
-                InitPinAsOutPut(_blinkPin);
-            }
-            _blinkPin.Write(_toggle ? GpioPinValue.High : GpioPinValue.Low);
-#endif
+//#endif
         }
     }
 }
