@@ -58,6 +58,28 @@ namespace BrewApp.Hardware.BK500
                 };
                 configs.Add("Config_3wires", config2);
 
+                var config3 = new Config()
+                {
+                    SPIInterfaceName = "SPI0",
+                    Configuration = (byte)(
+            (byte)Max31865.ConfigValues.VBIAS_ON |
+            (byte)Max31865.ConfigValues.THREE_WIRE |
+            (byte)Max31865.ConfigValues.FILTER_50Hz),
+                    SPIPin = SPIPin.PIN1
+                };
+                configs.Add("VesselTemperatureProbe", config3);
+
+                var config4 = new Config()
+                {
+                    SPIInterfaceName = "SPI0",
+                    Configuration = (byte)(
+            (byte)Max31865.ConfigValues.VBIAS_ON |
+            (byte)Max31865.ConfigValues.THREE_WIRE |
+            (byte)Max31865.ConfigValues.FILTER_50Hz),
+                    SPIPin = SPIPin.PIN0
+                };
+                configs.Add("MashTemperatureProbe", config4);
+
                 string content = string.Empty;
                 var serializer = new JsonSerializer();
                 // Lots of possible configurations:
@@ -128,15 +150,20 @@ namespace BrewApp.Hardware.BK500
                 configs.Add(configId, config);
             }
 
-            var content = JsonConvert.SerializeObject(configs);
+            var content = JsonConvert.SerializeObject(configs, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                Formatting = Formatting.Indented
+            });
             File.WriteAllText(path, content);
         }
     }
 
     public class TemperaturReader
     {
-#if (SIMULATOR || SIMULATOR_IO)
         string _config = null;
+#if (SIMULATOR || SIMULATOR_IO)
+        
 #else
          Max31865 _driver = null;
 #endif
@@ -144,7 +171,7 @@ namespace BrewApp.Hardware.BK500
         public async Task<bool> Init()
         {
 #if (!SIMULATOR && !SIMULATOR_IO)
-            var config = ConfigLoader.GetConfiguration(_configId);
+            var config = ConfigLoader.GetConfiguration(_config);
             _driver = new Max31865(config.Calibration, config.RRef);
             return await _driver.Initialize(config.SPIInterfaceName, (int)config.SPIPin, config.Configuration);
 #else

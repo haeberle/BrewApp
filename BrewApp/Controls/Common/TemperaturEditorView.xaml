@@ -1,0 +1,43 @@
+﻿<UserControl
+    x:Class="BrewApp.Controls.Common.TemperaturEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BrewApp.Controls.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    x:Name="temperatureView">
+    <Border BorderBrush="Red" BorderThickness="8" CornerRadius="3.2">
+        <Viewbox StretchDirection="Both">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <ColumnDefinition Width="5*"></ColumnDefinition>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Viewbox StretchDirection="Both" Grid.Column="1" Grid.Row="1">
+                    <TextBlock 
+            Foreground="Red"
+            VerticalAlignment="Top"
+            Text="{Binding ElementName=temperatureView, Path=Header}" 
+            
+            FontWeight="Bold"          
+            />
+                </Viewbox>
+                <Viewbox StretchDirection="Both" Grid.Column="1" Grid.Row="2">
+                    <TextBox Foreground="Red" FontWeight="Bold" Text="{Binding ElementName=temperatureView, Path=Temperature, Mode=TwoWay}" 
+                        extensions:TextBoxMask.Mask="99 °C"></TextBox>
+                </Viewbox>
+            </Grid>
+        </Viewbox>
+    </Border>
+</UserControl>

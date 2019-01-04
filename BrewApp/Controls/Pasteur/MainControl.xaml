@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converter="using:BrewApp.Controls.Converter"
     xmlns:controls="using:BrewApp.Controls.Common"
+    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -239,8 +240,13 @@
             <ColumnDefinition Width="10*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <controls:TemperatureSliderView Header="Solltemperatur" IsChangeEnabled="true" Temperature="{Binding PasteurViewModel.ToBeTemperature, Mode=TwoWay}" Grid.Row="1" Grid.Column="1"></controls:TemperatureSliderView>
-        <controls:TemperatureViewer Text="Isttemperatur" Temperature="{Binding PasteurViewModel.AsIsTemperature, Mode=OneWay}" Grid.Row="3" Grid.Column="1"></controls:TemperatureViewer>
+        <!--<controls:TemperatureSliderView Header="Solltemperatur" IsChangeEnabled="true" Temperature="{Binding PasteurViewModel.ToBeTemperature, Mode=TwoWay}" Grid.Row="1" Grid.Column="1"></controls:TemperatureSliderView>-->
+        <controls:TemperaturEditorView Header="Soll-Temp." Temperature="{Binding PasteurViewModel.ToBeTemperature, Mode=TwoWay}" Grid.Row="1" Grid.Column="1"></controls:TemperaturEditorView>
+        <!--<Viewbox Grid.Column="1" Grid.Row="1" >
+            <TextBox Text="{Binding PasteurViewModel.ToBeTemperature, Mode=TwoWay}" 
+        extensions:TextBoxMask.Mask="99"/>
+        </Viewbox>-->
+        <controls:TemperatureViewer Text="Ist-Temp" Temperature="{Binding PasteurViewModel.AsIsTemperature, Mode=OneWay}" Grid.Row="3" Grid.Column="1"></controls:TemperatureViewer>
         <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
             <!--<ToggleButton Click="tglStartStopVessel" IsChecked="{Binding PasteurViewModel.VesselRunning, Mode=TwoWay}" Content="{Binding PasteurViewModel.VesselStartStopButtonText}" 
                           Background="{Binding PasteurViewModel.VesselStartStopButtonBackground}"
@@ -260,7 +266,8 @@
                 </Button>
             </Viewbox>
         </StackPanel>
-        <controls:TimeSliderView ToBeTime="{Binding PasteurViewModel.ToBeTime, Mode=TwoWay}" AsIsTime="{Binding PasteurViewModel.AsIsTime, Mode=TwoWay}" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Header="Countdown" />
+        <!--<controls:TimeSliderView ToBeTime="{Binding PasteurViewModel.ToBeTime, Mode=TwoWay}" AsIsTime="{Binding PasteurViewModel.AsIsTime, Mode=TwoWay}" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Header="Countdown" />-->
+        <controls:TimeEditView ToBeTime="{Binding PasteurViewModel.ToBeTime, Mode=TwoWay}" AsIsTime="{Binding PasteurViewModel.AsIsTime, Mode=TwoWay}" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Header="Countdown" />
         <Viewbox StretchDirection="Both" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3" >
             <StackPanel Orientation="Horizontal">
                 <controls:MyToggleButton Click="tglStartStopTimer" IsChecked="{Binding PasteurViewModel.TimerStartIsEnabled, Mode=TwoWay}" Content="Start Timer" CheckedText="Stop Timer" Background="Green" CheckedBackground="Red" />

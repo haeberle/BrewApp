@@ -140,6 +140,9 @@
     <Compile Include="Controls\Brewery\ViewModel\InfoBoxViewModel.cs" />
     <Compile Include="Controls\Brewery\ViewModel\StepControlViewModel.cs" />
     <Compile Include="Controls\Common\MyToggleButton.cs" />
+    <Compile Include="Controls\Common\TemperaturEditorView.xaml.cs">
+      <DependentUpon>TemperaturEditorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Common\TemperatureSimulator.xaml.cs">
       <DependentUpon>TemperatureSimulator.xaml</DependentUpon>
     </Compile>
@@ -152,11 +155,15 @@
     <Compile Include="Controls\Common\TextViewer.xaml.cs">
       <DependentUpon>TextViewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Common\TimeEditView.xaml.cs">
+      <DependentUpon>TimeEditView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Common\TimeSliderView.xaml.cs">
       <DependentUpon>TimeSliderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Converter\BoolToBrushConverter.cs" />
     <Compile Include="Controls\Converter\BoolToTextConverter.cs" />
+    <Compile Include="Controls\Converter\HoursMinutesTimeSpanConverter.cs" />
     <Compile Include="Controls\Converter\InverseBooleanConverter.cs" />
     <Compile Include="Controls\Converter\ValueFormatter.cs" />
     <Compile Include="Controls\Navigation\TabHeader.xaml.cs">
@@ -279,6 +286,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Common\TemperaturEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Common\TemperatureSimulator.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -292,6 +303,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Common\TextViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Common\TimeEditView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -328,6 +343,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.7</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
+      <Version>5.0.0</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>

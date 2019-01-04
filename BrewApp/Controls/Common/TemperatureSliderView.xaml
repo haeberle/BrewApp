@@ -32,7 +32,7 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Thumb">
-                                                <Image Source="/Assets/tempthumb.png" />
+                                                <Image Source="/Assets/tempthumb.png" Height="20" />
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>

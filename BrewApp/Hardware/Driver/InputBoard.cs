@@ -10,18 +10,18 @@ namespace BrewApp.Hardware.Driver
 {
     public class InputBoard : IInputBoard
     {
-        public GpioPin GetGpio(int pin, GpioPinDriveMode mode = GpioPinDriveMode.Input)
-        {
-            if (!_gpios.ContainsKey(pin))
-            {
-                var g = GpioController.GetDefault().OpenPin(pin);
-                // Set the IO direction as input
-                g.SetDriveMode(mode);
-                _gpios.Add(pin, g);
-            }
+        //public GpioPin GetGpio(int pin, GpioPinDriveMode mode = GpioPinDriveMode.Input)
+        //{
+        //    if (!_gpios.ContainsKey(pin))
+        //    {
+        //        var g = GpioController.GetDefault().OpenPin(pin);
+        //        // Set the IO direction as input
+        //        g.SetDriveMode(mode);
+        //        _gpios.Add(pin, g);
+        //    }
 
-            return _gpios[pin];
-        }
+        //    return _gpios[pin];
+        //}
         public bool GetIO(int pin, GpioPinDriveMode mode = GpioPinDriveMode.Input)
         {
 #if (!SIMULATOR)

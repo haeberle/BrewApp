@@ -2,8 +2,11 @@
 using BrewApp.Hardware;
 using BrewApp.Hardware.BK500;
 using BrewApp.Hardware.Interfaces;
+using BrewApp.Logic;
 using BrewApp.ViewModel;
+using Newtonsoft.Json;
 using System;
+using System.IO;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -15,6 +18,11 @@ namespace BrewApp.Controls.Pasteur
 {
     public sealed partial class MainControl : UserControl
     {
+        public class Settings
+        {
+            public double TargetTemperature { get; set; }
+            public TimeSpan PasteurTime { get; set; }
+        }
         IVessel _vessel = null;
         IBlinker _blinker = null;
         public MainControl()
@@ -51,6 +59,11 @@ namespace BrewApp.Controls.Pasteur
             {
                 _viewModel = dc.PasteurViewModel;
 
+                var settings = GetSettings();
+
+                _viewModel.ToBeTime = settings.PasteurTime;
+                _viewModel.ToBeTemperature = settings.TargetTemperature;
+
                 //_viewModel.AckButtonBackground = new SolidColorBrush(Colors.Orange);
                 //_viewModel.AckButtonForeground = new SolidColorBrush(Colors.DarkGoldenrod);
 
@@ -71,7 +84,16 @@ namespace BrewApp.Controls.Pasteur
                 (_vessel as IStirrer)?.SetStirrer(0);
                 (_vessel as IStirrer)?.SetStirrerSpeed(0);
                 _vessel.SetTargetTemperature(_viewModel.ToBeTemperature);
+
+                var settings = GetSettings();
+
+                settings.PasteurTime = _viewModel.ToBeTime;
+                settings.TargetTemperature = _viewModel.ToBeTemperature;
+
+                SetSettings(settings);
+
                 _vessel.Start();
+
             }
             else
             {
@@ -157,5 +179,54 @@ namespace BrewApp.Controls.Pasteur
             _viewModel.TimerOver = false;
             _blinker?.EnableBlinker(false);
         }
+
+        const string PATH = "PasteurSettings.cfg";
+        Settings GetSettings()
+        {
+            var path = Path.Combine(Constants.ApplicationSettingsPath, PATH);
+            if (!File.Exists(path))
+            {
+                Directory.CreateDirectory(Constants.ApplicationSettingsPath);
+                var settings = new Settings();
+                var content = JsonConvert.SerializeObject(settings, new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    Formatting = Formatting.Indented
+                });
+                File.WriteAllText(path, content);
+                return settings;
+            }
+            else
+            {
+                var content = File.ReadAllText(path);
+
+                //var /*bytes*/ = System.Text.Encoding.Unicode.GetBytes(content);
+
+                var settings = JsonConvert.DeserializeObject<Settings>(content, new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    Formatting = Formatting.Indented
+                });
+                return settings;
+            }
+        }
+
+        void SetSettings(Settings settings)
+        {
+            var path = Path.Combine(Constants.ApplicationSettingsPath, PATH);
+            if (!File.Exists(path))
+            {
+                Directory.CreateDirectory(Constants.ApplicationSettingsPath);
+            }
+            string content = string.Empty;
+            content = JsonConvert.SerializeObject(settings, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                Formatting = Formatting.Indented
+            });
+            File.WriteAllText(path, content);
+
+        }
+
     }
 }

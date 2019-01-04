@@ -10,6 +10,6 @@ namespace BrewApp.Hardware.Interfaces
     public interface IInputBoard
     {
         bool GetIO(int pin, GpioPinDriveMode mode);
-        GpioPin GetGpio(int pin, GpioPinDriveMode mode);
+        //GpioPin GetGpio(int pin, GpioPinDriveMode mode);
     }
 }

@@ -60,7 +60,7 @@ namespace BrewApp
                 }
 
                 // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
+                Window.Current.Content = rootFrame;  
             }
 
             if (e.PrelaunchActivated == false)
@@ -75,6 +75,13 @@ namespace BrewApp
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+
+            if (!File.Exists(Path.Combine(BrewApp.Logic.Constants.ApplicationLogPath, "NewStartLog.txt")))
+            {
+                Directory.CreateDirectory(BrewApp.Logic.Constants.ApplicationLogPath);
+            }
+
+            File.AppendAllText(Path.Combine(BrewApp.Logic.Constants.ApplicationLogPath, "NewStartLog.txt"), $"NewStart at {DateTime.Now.ToString()}" + Environment.NewLine);
             Vessel.InitVessel();
         }
 

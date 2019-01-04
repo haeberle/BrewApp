@@ -26,7 +26,7 @@
                 <TextBlock 
             Foreground="Red"
             VerticalAlignment="Top"
-            Text="{Binding ElementName=temperatureView, Path=Temperature, Converter={StaticResource ValueFormatter},ConverterParameter=\{0\} °C}" 
+            Text="{Binding ElementName=temperatureView, Path=Temperature, Converter={StaticResource ValueFormatter},ConverterParameter=\{0:0.0\} °C}" 
             FontSize="100"
             FontWeight="Bold"          
             />
